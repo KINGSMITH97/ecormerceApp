@@ -13,6 +13,7 @@ class Home extends StatelessWidget {
         fontSize: 20,
         color: Colors.amber, 
         fontWeight: FontWeight.bold,
+        textBaseline: TextBaseline.alphabetic,
       ),),
       ),
     );
