@@ -12,7 +12,7 @@ class Home extends StatelessWidget {
       body: const Column(
         children: [
           Center(child: Text('Im home', style: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             color: Colors.amber, 
             fontWeight: FontWeight.bold,
             textBaseline: TextBaseline.alphabetic,
