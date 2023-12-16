@@ -5,9 +5,14 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Im home'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Ecomerce App')
+      ),
+      body: const Center(child: Text('Im home', style: TextStyle(
+        fontSize: 20,
+      )),
       ),
     );
   }
-}
+} 
