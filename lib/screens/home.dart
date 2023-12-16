@@ -11,7 +11,9 @@ class Home extends StatelessWidget {
       ),
       body: const Center(child: Text('Im home', style: TextStyle(
         fontSize: 20,
-      )),
+        color: Colors.amber, 
+        fontWeight: FontWeight.bold,
+      ),),
       ),
     );
   }
