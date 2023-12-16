@@ -9,12 +9,16 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Ecomerce App')
       ),
-      body: const Center(child: Text('Im home', style: TextStyle(
-        fontSize: 20,
-        color: Colors.amber, 
-        fontWeight: FontWeight.bold,
-        textBaseline: TextBaseline.alphabetic,
-      ),),
+      body: const Column(
+        children: [
+          Center(child: Text('Im home', style: TextStyle(
+            fontSize: 20,
+            color: Colors.amber, 
+            fontWeight: FontWeight.bold,
+            textBaseline: TextBaseline.alphabetic,
+          ),),
+          ),
+        ],
       ),
     );
   }
