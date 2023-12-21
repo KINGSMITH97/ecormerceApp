@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/home.dart';
+import 'package:flutter_application_1/routes/app_router.dart';
+import 'package:flutter_application_1/screens/launch_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized;
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
+  final AppRouter appRouter = AppRouter();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      onGenerateRoute: appRouter.ongenerateRoute,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        
+        fontFamily: 'Satoshi',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Home(),
+      home: const LaunchScreen(),
     );
   }
 }
-
