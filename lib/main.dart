@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/routes/app_router.dart';
 import 'package:flutter_application_1/screens/launch_screen.dart';
 
@@ -14,6 +15,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return MaterialApp(
       title: 'Flutter Demo',
       onGenerateRoute: appRouter.ongenerateRoute,

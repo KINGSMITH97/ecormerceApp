@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
 import 'package:flutter_application_1/shared_components/button.dart';
+import 'package:flutter_application_1/shared_components/outline_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -21,17 +22,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Spacer(),
             CarouselSlider.builder(
               carouselController: controller,
               itemCount: AppConstants.carouselImages.length,
               itemBuilder: (context, index, realIndex) {
-                final imageUrl = AppConstants.carouselImages[index];
+                final imageUrl = AppConstants.carouselImages[index]['image'];
                 return buildCarouselImage(imageUrl, index);
               },
               options: CarouselOptions(
                 viewportFraction: 1,
                 enableInfiniteScroll: false,
-                height: 500,
+                height: 670,
                 onPageChanged: ((index, reason) {
                   setState(() {
                     activeIndex = index;
@@ -39,30 +41,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 }),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
             AnimatedSmoothIndicator(
               activeIndex: activeIndex,
               count: AppConstants.carouselImages.length,
-              effect: const ExpandingDotsEffect(
-                expansionFactor: 2,
+              effect: ExpandingDotsEffect(
+                dotColor: Colors.blueAccent.shade100,
+                activeDotColor: Colors.blueAccent.shade700,
+                dotHeight: 10,
+                dotWidth: 10,
+                expansionFactor: 1.9,
               ),
             ),
             const SizedBox(height: 24),
             ButtonWidget(
-              title: 'Next',
-              btColor: Colors.deepPurple,
+              title: (activeIndex == 2) ? 'Get Started' : 'Next',
+              titleColor: Colors.white,
+              btColor: Colors.blueAccent.shade700,
               onTap: () {
-                controller.nextPage();
+                if (activeIndex == 2) {
+                  Navigator.pushNamed(context, '/home');
+                } else {
+                  controller.nextPage();
+                }
               },
             ),
-            const SizedBox(height: 16),
-            ButtonWidget(
-              title: 'Skip',
-              btColor: Colors.grey.shade100,
-              onTap: () {
-                Navigator.pushNamed(context, "/home");
-              },
-            ),
+            // const SizedBox(height: 24),
+            const Spacer(),
           ],
         ),
       ),
@@ -70,12 +75,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget buildCarouselImage(String imageUrl, int index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return Column(
+      children: [
+        Container(
+          height: 500,
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(imageUrl),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        const SizedBox(height: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            AppConstants.carouselImages[index]['title'],
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            AppConstants.carouselImages[index]['description'],
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
