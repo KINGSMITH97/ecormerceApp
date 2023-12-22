@@ -19,26 +19,22 @@ class ButtonWidget extends StatefulWidget {
 class _ButtonWidgetState extends State<ButtonWidget> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: SizedBox(
-        height: 65,
-        width: double.infinity,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            backgroundColor: widget.btColor,
-          ),
-          onPressed: widget.onTap,
-          child: Text(
-            widget.title,
-            style: TextStyle(
-              color: widget.titleColor ?? Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+    return SizedBox(
+      height: 65,
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          backgroundColor: widget.btColor,
+        ),
+        onPressed: widget.onTap,
+        child: Text(
+          widget.title,
+          style: TextStyle(
+            color: widget.titleColor ?? Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
 import 'package:flutter_application_1/shared_components/button.dart';
-import 'package:flutter_application_1/shared_components/outline_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -60,7 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               btColor: Colors.blueAccent.shade700,
               onTap: () {
                 if (activeIndex == 2) {
-                  Navigator.pushNamed(context, '/home');
+                  Navigator.pushNamed(context, '/login');
                 } else {
                   controller.nextPage();
                 }
