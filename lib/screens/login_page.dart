@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
+import 'package:flutter_application_1/services/user_auth.dart';
 import 'package:flutter_application_1/shared_components/button.dart';
 import 'package:flutter_application_1/shared_components/txtfield.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,6 +14,23 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  Future<void> login(String email, String password) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      print("Error $e");
+      return;
+    }
+    if (mounted) {
+      Navigator.pushNamed(context, "/home");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,14 +67,18 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 20,
                 )),
             const SizedBox(height: 8),
-            const TxtField(),
+            TxtField(
+              controller: emailController,
+            ),
             const SizedBox(height: 16),
             const Text('Password',
                 style: TextStyle(
                   fontSize: 20,
                 )),
             const SizedBox(height: 8),
-            const TxtField(),
+            TxtField(
+              controller: passwordController,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -76,7 +99,12 @@ class _LoginPageState extends State<LoginPage> {
               title: 'Login',
               titleColor: Colors.white,
               btColor: Colors.blueAccent.shade700,
-              onTap: () {},
+              onTap: () {
+                login(
+                  emailController.text.trim(),
+                  passwordController.text.trim(),
+                );
+              },
             ),
             const SizedBox(height: 24),
             Row(

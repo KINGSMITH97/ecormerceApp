@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
+import 'package:flutter_application_1/screens/login_page.dart';
 import 'package:flutter_application_1/shared_components/button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -14,6 +16,12 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int activeIndex = 0;
   CarouselController controller = CarouselController();
+
+  storeOnBoard() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('isViewed', 2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,17 +61,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            ButtonWidget(
-              title: (activeIndex == 2) ? 'Get Started' : 'Next',
-              titleColor: Colors.white,
-              btColor: Colors.blueAccent.shade700,
-              onTap: () {
-                if (activeIndex == 2) {
-                  Navigator.pushNamed(context, '/login');
-                } else {
-                  controller.nextPage();
-                }
-              },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: ButtonWidget(
+                title: (activeIndex == 2) ? 'Get Started' : 'Next',
+                titleColor: Colors.white,
+                btColor: Colors.blueAccent.shade700,
+                onTap: () async {
+                  if (activeIndex == 2) {
+                    await storeOnBoard();
+
+                    Navigator.pushNamed(
+                      (context),
+                      "/login",
+                    );
+                  } else {
+                    controller.nextPage();
+                  }
+                },
+              ),
             ),
             // const SizedBox(height: 24),
             const Spacer(),

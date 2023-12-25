@@ -5,9 +5,11 @@ import 'package:flutter_application_1/firebase_options.dart';
 import 'package:flutter_application_1/routes/app_router.dart';
 import 'package:flutter_application_1/screens/launch_screen.dart';
 
+//int? isViewed;
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized;
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(MyApp());
 }
 
