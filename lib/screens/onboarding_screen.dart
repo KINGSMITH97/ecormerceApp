@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
-import 'package:flutter_application_1/screens/login_page.dart';
+
 import 'package:flutter_application_1/shared_components/button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

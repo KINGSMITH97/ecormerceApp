@@ -1,9 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
-import 'package:flutter_application_1/screens/home.dart';
-import 'package:flutter_application_1/screens/login_page.dart';
-import 'package:flutter_application_1/screens/onboarding_screen.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,20 +30,6 @@ class _LaunchScreenState extends State<LaunchScreen> {
     });
     super.initState();
   }
-
-  // handleStartScreen() async {
-  //   print('handleScreen Function is working oooo');
-  //   StreamBuilder(
-  //     stream: FirebaseAuth.instance.authStateChanges(),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.hasData) {
-  //         return const Home();
-  //       } else {
-  //         return const LoginPage();
-  //       }
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {

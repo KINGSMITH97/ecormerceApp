@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
 import 'package:flutter_application_1/services/user_auth.dart';
 import 'package:flutter_application_1/shared_components/button.dart';
 import 'package:flutter_application_1/shared_components/txtfield.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,21 +14,24 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  Future<void> login(String email, String password) async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } catch (e) {
-      print("Error $e");
-      return;
-    }
-    if (mounted) {
-      Navigator.pushNamed(context, "/home");
-    }
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+
+  AuthServices auth = AuthServices();
+  bool isPasswordObsecured = true;
+
+  @override
+  void initState() {
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                 )),
             const SizedBox(height: 8),
             TxtField(
+              obscureText: false,
               controller: emailController,
             ),
             const SizedBox(height: 16),
@@ -76,9 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 20,
                 )),
             const SizedBox(height: 8),
-            TxtField(
-              controller: passwordController,
-            ),
+            passwordTextField(),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -99,11 +101,24 @@ class _LoginPageState extends State<LoginPage> {
               title: 'Login',
               titleColor: Colors.white,
               btColor: Colors.blueAccent.shade700,
-              onTap: () {
-                login(
-                  emailController.text.trim(),
-                  passwordController.text.trim(),
-                );
+              onTap: () async {
+                if (emailController.text.isEmpty ||
+                    passwordController.text.isEmpty) {
+                  Fluttertoast.showToast(
+                    msg: "Email or password field is empty",
+                    toastLength: Toast.LENGTH_LONG,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                  );
+                } else {
+                  auth.login(
+                    emailController.text.trim(),
+                    passwordController.text.trim(),
+                  );
+                  if (mounted) {
+                    Navigator.pushNamed(context, '/home');
+                  }
+                }
               },
             ),
             const SizedBox(height: 24),
@@ -134,6 +149,40 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container passwordTextField() {
+    return Container(
+      height: 60,
+      //width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          obscureText: isPasswordObsecured,
+          decoration: InputDecoration(
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  isPasswordObsecured = !isPasswordObsecured;
+                });
+              },
+              icon: isPasswordObsecured
+                  ? const Icon(Icons.visibility_off)
+                  : const Icon(Icons.visibility),
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+          ),
         ),
       ),
     );

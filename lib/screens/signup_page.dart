@@ -6,6 +6,7 @@ import 'package:flutter_application_1/services/user_auth.dart';
 import 'package:flutter_application_1/shared_components/button.dart';
 import 'package:flutter_application_1/shared_components/txtfield.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -20,27 +21,9 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  Future<void> register(String email, String password, String username) async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      String userId = userCredential.user!.uid;
-      await FirebaseFirestore.instance.collection("users").doc(userId).set({
-        "email": email,
-        "username": username,
-      });
-    } catch (e) {
-      print("Error $e");
-      return;
-    }
-    if (mounted) {
-      Navigator.pushNamed(context, '/signupcompleted');
-    }
-  }
+  AuthServices auth = AuthServices();
 
+  bool isPasswordObsecured = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,6 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 )),
             const SizedBox(height: 8),
             TxtField(
+              obscureText: false,
               controller: usernameController,
             ),
             const SizedBox(height: 16),
@@ -89,6 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 )),
             const SizedBox(height: 8),
             TxtField(
+              obscureText: false,
               controller: emailController,
             ),
             const SizedBox(height: 16),
@@ -98,7 +83,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 )),
             const SizedBox(height: 8),
             TxtField(
+              obscureText: false,
               controller: phoneController,
+              keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 16),
             const Text('Password',
@@ -106,20 +93,32 @@ class _SignUpPageState extends State<SignUpPage> {
                   fontSize: 20,
                 )),
             const SizedBox(height: 8),
-            TxtField(
-              controller: passwordController,
-            ),
+            passwordTextField(),
             const SizedBox(height: 32),
             ButtonWidget(
               title: 'Create Account',
               titleColor: Colors.white,
               btColor: Colors.blueAccent.shade700,
-              onTap: () {
-                register(
-                  emailController.text.trim(),
-                  passwordController.text.trim(),
-                  usernameController.text.trim(),
-                );
+              onTap: () async {
+                if (emailController.text.isEmpty ||
+                    usernameController.text.isEmpty ||
+                    phoneController.text.isEmpty ||
+                    passwordController.text.isEmpty) {
+                  Fluttertoast.showToast(
+                    msg: "None of the fields should be empty",
+                    toastLength: Toast.LENGTH_LONG,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                  );
+                } else {
+                  auth.register(
+                    emailController.text.trim(),
+                    passwordController.text.trim(),
+                  );
+                  if (mounted) {
+                    Navigator.pushNamed(context, '/signupcompleted');
+                  }
+                }
               },
             ),
             const SizedBox(height: 24),
@@ -150,6 +149,40 @@ class _SignUpPageState extends State<SignUpPage> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container passwordTextField() {
+    return Container(
+      height: 60,
+      //width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          obscureText: isPasswordObsecured,
+          decoration: InputDecoration(
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  isPasswordObsecured = !isPasswordObsecured;
+                });
+              },
+              icon: isPasswordObsecured
+                  ? const Icon(Icons.visibility_off)
+                  : const Icon(Icons.visibility),
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+          ),
         ),
       ),
     );
