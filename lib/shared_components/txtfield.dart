@@ -5,11 +5,9 @@ class TxtField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.obscureText,
-    this.keyboardType,
   });
   final TextEditingController controller;
   final bool obscureText;
-  TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,6 @@ class TxtField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
-        keyboardType: keyboardType ?? TextInputType.none,
         decoration: const InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 8),
           enabledBorder: InputBorder.none,

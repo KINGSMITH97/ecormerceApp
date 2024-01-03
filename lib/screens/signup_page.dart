@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
 import 'package:flutter_application_1/services/user_auth.dart';
@@ -16,12 +14,30 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  late TextEditingController emailController;
+  late TextEditingController usernameController;
+  late TextEditingController phoneController;
+  late TextEditingController passwordController;
 
   AuthServices auth = AuthServices();
+
+  @override
+  void initState() {
+    emailController = TextEditingController();
+    usernameController = TextEditingController();
+    phoneController = TextEditingController();
+    passwordController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    usernameController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   bool isPasswordObsecured = true;
   @override
@@ -85,7 +101,6 @@ class _SignUpPageState extends State<SignUpPage> {
             TxtField(
               obscureText: false,
               controller: phoneController,
-              keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 16),
             const Text('Password',

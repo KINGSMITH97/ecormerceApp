@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                     textColor: Colors.white,
                   );
                 } else {
-                  auth.login(
+                  await auth.login(
                     emailController.text.trim(),
                     passwordController.text.trim(),
                   );
