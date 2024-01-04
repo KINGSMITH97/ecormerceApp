@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
+import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_application_1/services/user_auth.dart';
 import 'package:flutter_application_1/shared_components/button.dart';
 import 'package:flutter_application_1/shared_components/txtfield.dart';
@@ -19,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
 
   AuthServices auth = AuthServices();
   bool isPasswordObsecured = true;
+  bool isLoginButtonClicked = false;
 
   @override
   void initState() {
@@ -98,26 +100,18 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 24),
             ButtonWidget(
+              isLoading: isLoginButtonClicked,
               title: 'Login',
               titleColor: Colors.white,
               btColor: Colors.blueAccent.shade700,
-              onTap: () async {
-                if (emailController.text.isEmpty ||
-                    passwordController.text.isEmpty) {
-                  Fluttertoast.showToast(
-                    msg: "Email or password field is empty",
-                    toastLength: Toast.LENGTH_LONG,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                  );
+              onTap: () {
+                if (hasValidatedTextInputs() == true) {
+                  login();
                 } else {
-                  await auth.login(
-                    emailController.text.trim(),
-                    passwordController.text.trim(),
+                  Fluttertoast.showToast(
+                    msg: "Email or password fields can't be empty",
+                    backgroundColor: Colors.red,
                   );
-                  if (mounted) {
-                    Navigator.pushNamed(context, '/home');
-                  }
                 }
               },
             ),
@@ -154,6 +148,37 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  bool hasValidatedTextInputs() {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+  void login() async {
+    setState(() {
+      isLoginButtonClicked = true;
+    });
+
+    var result =
+        await auth.login(emailController.text, passwordController.text);
+
+    setState(() {
+      isLoginButtonClicked = false;
+    });
+    if (!mounted) {
+      return;
+    }
+    if (result == null) {
+      Fluttertoast.showToast(
+        msg: 'User not found',
+        backgroundColor: Colors.red,
+      );
+    } else {
+      Navigator.pushNamed(context, '/home');
+    }
+  }
+
   Container passwordTextField() {
     return Container(
       height: 60,
@@ -167,6 +192,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(
+          controller: passwordController,
           obscureText: isPasswordObsecured,
           decoration: InputDecoration(
             suffixIcon: IconButton(

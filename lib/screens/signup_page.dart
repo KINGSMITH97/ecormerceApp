@@ -20,6 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController passwordController;
 
   AuthServices auth = AuthServices();
+  bool isSignupButtonClicked = false;
 
   @override
   void initState() {
@@ -111,28 +112,18 @@ class _SignUpPageState extends State<SignUpPage> {
             passwordTextField(),
             const SizedBox(height: 32),
             ButtonWidget(
+              isLoading: isSignupButtonClicked,
               title: 'Create Account',
               titleColor: Colors.white,
               btColor: Colors.blueAccent.shade700,
-              onTap: () async {
-                if (emailController.text.isEmpty ||
-                    usernameController.text.isEmpty ||
-                    phoneController.text.isEmpty ||
-                    passwordController.text.isEmpty) {
-                  Fluttertoast.showToast(
-                    msg: "None of the fields should be empty",
-                    toastLength: Toast.LENGTH_LONG,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                  );
+              onTap: () {
+                if (hasValidatedTextInputs() == true) {
+                  register();
                 } else {
-                  auth.register(
-                    emailController.text.trim(),
-                    passwordController.text.trim(),
+                  Fluttertoast.showToast(
+                    msg: "fields can't be empty",
+                    backgroundColor: Colors.red,
                   );
-                  if (mounted) {
-                    Navigator.pushNamed(context, '/signupcompleted');
-                  }
                 }
               },
             ),
@@ -169,6 +160,42 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  bool hasValidatedTextInputs() {
+    if (emailController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        phoneController.text.isEmpty ||
+        usernameController.text.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+  void register() async {
+    setState(() {
+      isSignupButtonClicked = true;
+    });
+
+    var result = await auth.register(
+      emailController.text,
+      passwordController.text,
+    );
+
+    setState(() {
+      isSignupButtonClicked = false;
+    });
+    if (!mounted) {
+      return;
+    }
+    if (result == null) {
+      Fluttertoast.showToast(
+        msg: 'User not found',
+        backgroundColor: Colors.red,
+      );
+    } else {
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+
   Container passwordTextField() {
     return Container(
       height: 60,
@@ -182,6 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(
+          controller: passwordController,
           obscureText: isPasswordObsecured,
           decoration: InputDecoration(
             suffixIcon: IconButton(

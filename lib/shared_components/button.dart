@@ -6,11 +6,13 @@ class ButtonWidget extends StatefulWidget {
       required this.title,
       required this.btColor,
       required this.onTap,
-      this.titleColor});
+      this.titleColor,
+      this.isLoading});
   final String title;
   final Color btColor;
-  final Function() onTap;
+  final Function()? onTap;
   Color? titleColor;
+  final bool? isLoading;
 
   @override
   State<ButtonWidget> createState() => _ButtonWidgetState();
@@ -29,14 +31,18 @@ class _ButtonWidgetState extends State<ButtonWidget> {
           backgroundColor: widget.btColor,
         ),
         onPressed: widget.onTap,
-        child: Text(
-          widget.title,
-          style: TextStyle(
-            color: widget.titleColor ?? Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child: (widget.isLoading == false)
+            ? Text(
+                widget.title,
+                style: TextStyle(
+                  color: widget.titleColor ?? Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : const CircularProgressIndicator(
+                color: Colors.white,
+              ),
       ),
     );
   }
