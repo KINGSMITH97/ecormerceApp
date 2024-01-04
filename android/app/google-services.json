@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "937748615679",
+    "project_id": "shoplygh",
+    "storage_bucket": "shoplygh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937748615679:android:c6b0956ee4287b0f7157ca",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBqwd33W6CeHvyhoQOfqNkaA6sAQX5Ylw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LaunchScreen extends StatefulWidget {
   const LaunchScreen({super.key});
@@ -10,12 +11,23 @@ class LaunchScreen extends StatefulWidget {
 }
 
 class _LaunchScreenState extends State<LaunchScreen> {
+  int? isViewed;
+
+  handleStartScreen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isViewed = prefs.getInt('isViewed');
+  }
+
   @override
   void initState() {
-    Future.delayed(
-      const Duration(seconds: 3),
-      () => Navigator.pushNamed(context, "/onboarding"),
-    );
+    handleStartScreen();
+    Future.delayed(const Duration(seconds: 2), () {
+      if (isViewed != 2) {
+        Navigator.pushNamed(context, "/onboarding");
+      } else {
+        Navigator.pushNamed(context, "/login");
+      }
+    });
     super.initState();
   }
 
