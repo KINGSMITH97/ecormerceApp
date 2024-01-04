@@ -10,7 +10,7 @@ class AuthServices {
     try {
       UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      print(userCredential.credential);
+
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       Fluttertoast.showToast(

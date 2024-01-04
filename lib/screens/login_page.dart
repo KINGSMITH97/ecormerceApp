@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
-import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_application_1/services/user_auth.dart';
 import 'package:flutter_application_1/shared_components/button.dart';
 import 'package:flutter_application_1/shared_components/txtfield.dart';
