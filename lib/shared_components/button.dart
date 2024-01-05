@@ -14,6 +14,7 @@ class ButtonWidget extends StatefulWidget {
   final Color btColor;
   final Function()? onTap;
   Color? titleColor;
+
   final bool? isLoading;
 
   @override

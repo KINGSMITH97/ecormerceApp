@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
 import 'package:flutter_application_1/services/user_auth.dart';
@@ -14,6 +15,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final formKey = GlobalKey<FormState>();
   late TextEditingController emailController;
   late TextEditingController usernameController;
   late TextEditingController phoneController;
@@ -45,119 +47,144 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: MediaQuery.of(context).size.height * 0.1,
-          ),
-          children: [
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              SvgPicture.asset(
-                AppConstants.logoName,
-                width: 40,
-                height: 40,
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                'ShoplyGH',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
+        child: Form(
+          key: formKey,
+          child: ListView(
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: MediaQuery.of(context).size.height * 0.1,
+            ),
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                SvgPicture.asset(
+                  AppConstants.logoName,
+                  width: 40,
+                  height: 40,
                 ),
-              ),
-            ]),
-            const SizedBox(height: 24),
-            const Text('Create an account',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w500,
-                )),
-            const SizedBox(height: 18),
-            const Text('Username',
-                style: TextStyle(
-                  fontSize: 20,
-                )),
-            const SizedBox(height: 8),
-            TxtField(
-              obscureText: false,
-              controller: usernameController,
-            ),
-            const SizedBox(height: 16),
-            const Text('Email',
-                style: TextStyle(
-                  fontSize: 20,
-                )),
-            const SizedBox(height: 8),
-            TxtField(
-              obscureText: false,
-              controller: emailController,
-            ),
-            const SizedBox(height: 16),
-            const Text('Phone Number',
-                style: TextStyle(
-                  fontSize: 20,
-                )),
-            const SizedBox(height: 8),
-            TxtField(
-              obscureText: false,
-              controller: phoneController,
-            ),
-            const SizedBox(height: 16),
-            const Text('Password',
-                style: TextStyle(
-                  fontSize: 20,
-                )),
-            const SizedBox(height: 8),
-            passwordTextField(),
-            const SizedBox(height: 32),
-            ButtonWidget(
-              isLoading: isSignupButtonClicked,
-              title: 'Create Account',
-              titleColor: Colors.white,
-              btColor: Colors.blueAccent.shade700,
-              onTap: () {
-                if (hasValidatedTextInputs() == true) {
-                  register();
-                } else {
-                  Fluttertoast.showToast(
-                    msg: "fields can't be empty",
-                    backgroundColor: Colors.red,
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+                const SizedBox(width: 8),
                 const Text(
-                  "Already have an account",
+                  'ShoplyGH',
                   style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-                const SizedBox(width: 4),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/login");
-                  },
-                  child: Text(
-                    'Login',
+              ]),
+              const SizedBox(height: 24),
+              const Text('Create an account',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w500,
+                  )),
+              const SizedBox(height: 18),
+              const Text('Username',
+                  style: TextStyle(
+                    fontSize: 20,
+                  )),
+              const SizedBox(height: 8),
+              TxtField(
+                obscureText: false,
+                controller: usernameController,
+              ),
+              const SizedBox(height: 16),
+              const Text('Email',
+                  style: TextStyle(
+                    fontSize: 20,
+                  )),
+              const SizedBox(height: 8),
+              TxtField(
+                validator: (email) =>
+                    email != null && !EmailValidator.validate(email)
+                        ? "Enter a valid email"
+                        : null,
+                obscureText: false,
+                controller: emailController,
+              ),
+              const SizedBox(height: 16),
+              const Text('Phone Number',
+                  style: TextStyle(
+                    fontSize: 20,
+                  )),
+              const SizedBox(height: 8),
+              TxtField(
+                keyboardType: TextInputType.phone,
+                obscureText: false,
+                controller: phoneController,
+              ),
+              const SizedBox(height: 16),
+              const Text('Password',
+                  style: TextStyle(
+                    fontSize: 20,
+                  )),
+              const SizedBox(height: 8),
+              passwordTextField(),
+              const SizedBox(height: 32),
+              ButtonWidget(
+                isLoading: isSignupButtonClicked,
+                title: 'Create Account',
+                titleColor: Colors.white,
+                btColor: Colors.blueAccent.shade700,
+                onTap: () {
+                  final form = formKey.currentState!;
+                  if (hasValidatedTextInputs() == true) {
+                    if (isPhoneLengthValidated() == true) {
+                      if (form.validate()) {
+                        register();
+                      }
+                    }
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: "fields can't be empty",
+                      backgroundColor: Colors.red,
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Already have an account",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: Colors.blueAccent.shade700,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: 4),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, "/login");
+                    },
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blueAccent.shade700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  bool isPhoneLengthValidated() {
+    if (phoneController.text.length != 10) {
+      Fluttertoast.showToast(
+        msg: "phone number length should be 10",
+        backgroundColor: Colors.red,
+      );
+
+      return false;
+    }
+    return true;
   }
 
   bool hasValidatedTextInputs() {
@@ -167,6 +194,7 @@ class _SignUpPageState extends State<SignUpPage> {
         usernameController.text.isEmpty) {
       return false;
     }
+
     return true;
   }
 

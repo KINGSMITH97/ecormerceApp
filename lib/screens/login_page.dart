@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_constants.dart';
 import 'package:flutter_application_1/services/user_auth.dart';
@@ -14,6 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final formKey = GlobalKey<FormState>();
   late TextEditingController emailController;
   late TextEditingController passwordController;
 
@@ -40,108 +42,119 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              SvgPicture.asset(
-                AppConstants.logoName,
-                width: 40,
-                height: 40,
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                'ShoplyGH',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                SvgPicture.asset(
+                  AppConstants.logoName,
+                  width: 40,
+                  height: 40,
                 ),
+                const SizedBox(width: 8),
+                const Text(
+                  'ShoplyGH',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ]),
+              const SizedBox(height: 24),
+              const Text('Login to your account',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w500,
+                  )),
+              const SizedBox(height: 18),
+              const Text('Email',
+                  style: TextStyle(
+                    fontSize: 20,
+                  )),
+              const SizedBox(height: 8),
+              TxtField(
+                keyboardType: TextInputType.emailAddress,
+                validator: (email) =>
+                    email != null && !EmailValidator.validate(email)
+                        ? "Enter a valid email"
+                        : null,
+                obscureText: false,
+                controller: emailController,
               ),
-            ]),
-            const SizedBox(height: 24),
-            const Text('Login to your account',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w500,
-                )),
-            const SizedBox(height: 18),
-            const Text('Email',
-                style: TextStyle(
-                  fontSize: 20,
-                )),
-            const SizedBox(height: 8),
-            TxtField(
-              obscureText: false,
-              controller: emailController,
-            ),
-            const SizedBox(height: 16),
-            const Text('Password',
-                style: TextStyle(
-                  fontSize: 20,
-                )),
-            const SizedBox(height: 8),
-            passwordTextField(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Forgot password?',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blueAccent.shade700,
+              const SizedBox(height: 16),
+              const Text('Password',
+                  style: TextStyle(
+                    fontSize: 20,
+                  )),
+              const SizedBox(height: 8),
+              passwordTextField(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Forgot password?',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blueAccent.shade700,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            ButtonWidget(
-              isLoading: isLoginButtonClicked,
-              title: 'Login',
-              titleColor: Colors.white,
-              btColor: Colors.blueAccent.shade700,
-              onTap: () {
-                if (hasValidatedTextInputs() == true) {
-                  login();
-                } else {
-                  Fluttertoast.showToast(
-                    msg: "Email or password fields can't be empty",
-                    backgroundColor: Colors.red,
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don't have an account?",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/signup");
-                  },
-                  child: Text(
-                    'Sign up',
+                ],
+              ),
+              const SizedBox(height: 24),
+              ButtonWidget(
+                isLoading: isLoginButtonClicked,
+                title: 'Login',
+                titleColor: Colors.white,
+                btColor: Colors.blueAccent.shade700,
+                onTap: () {
+                  final form = formKey.currentState!;
+                  if (hasValidatedTextInputs() == true) {
+                    if (form.validate()) {
+                      login();
+                    }
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: "Email or password fields can't be empty",
+                      backgroundColor: Colors.red,
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have an account?",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: Colors.blueAccent.shade700,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: 4),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, "/signup");
+                    },
+                    child: Text(
+                      'Sign up',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blueAccent.shade700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

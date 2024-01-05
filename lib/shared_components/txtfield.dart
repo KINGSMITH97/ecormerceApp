@@ -5,9 +5,14 @@ class TxtField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.obscureText,
+    this.keyboardType,
+    this.validator,
   });
   final TextEditingController controller;
   final bool obscureText;
+
+  String? Function(String?)? validator;
+  TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +27,8 @@ class TxtField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
+        keyboardType: keyboardType,
+        validator: validator,
         decoration: const InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 8),
           enabledBorder: InputBorder.none,
